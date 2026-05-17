@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://simik.onrender.com";
+const API_BASE_URL = "https://simik.onrender.com/api";
 
 export async function registerUser(userData) {
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
