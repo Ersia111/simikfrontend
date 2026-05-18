@@ -3,9 +3,7 @@ const API_BASE_URL = "https://simik.onrender.com/api";
 export async function registerUser(userData) {
   const response = await fetch(`${API_BASE_URL}/auth/register`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
   });
 
@@ -21,9 +19,7 @@ export async function registerUser(userData) {
 export async function loginUser(loginData) {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(loginData),
   });
 
@@ -35,6 +31,7 @@ export async function loginUser(loginData) {
 
   return data;
 }
+
 export async function getAllJobs() {
   const response = await fetch(`${API_BASE_URL}/jobs`);
 
@@ -48,9 +45,7 @@ export async function getAllJobs() {
 export async function applyToJob(applicationData) {
   const response = await fetch(`${API_BASE_URL}/applications/apply`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(applicationData),
   });
 
@@ -62,12 +57,11 @@ export async function applyToJob(applicationData) {
 
   return text;
 }
+
 export async function createJob(jobData) {
   const response = await fetch(`${API_BASE_URL}/jobs/create`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(jobData),
   });
 
@@ -79,8 +73,9 @@ export async function createJob(jobData) {
 
   return text;
 }
+
 export async function getPackages() {
-  const response = await fetch("http://localhost:8080/api/packages");
+  const response = await fetch(`${API_BASE_URL}/packages`);
 
   if (!response.ok) {
     throw new Error("Gabim gjatë marrjes së paketave.");
@@ -90,22 +85,21 @@ export async function getPackages() {
 }
 
 export async function buyPackage(data) {
-  const response = await fetch("http://localhost:8080/api/packages/buy", {
+  const response = await fetch(`${API_BASE_URL}/packages/buy`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 
   const text = await response.text();
 
   if (!response.ok) {
-    throw new Error(text);
+    throw new Error(text || "Gabim gjatë blerjes së paketës.");
   }
 
   return text;
 }
+
 export async function getApplicationsByJob(jobPostId) {
   const response = await fetch(`${API_BASE_URL}/applications/job/${jobPostId}`);
 
@@ -115,9 +109,10 @@ export async function getApplicationsByJob(jobPostId) {
 
   return response.json();
 }
+
 export async function getApplicationsByEmployee(email) {
   const response = await fetch(
-    `http://localhost:8080/api/applications/employee/${email}`
+    `${API_BASE_URL}/applications/employee/${email}`
   );
 
   if (!response.ok) {
@@ -126,12 +121,11 @@ export async function getApplicationsByEmployee(email) {
 
   return response.json();
 }
+
 export async function saveEmployeeProfile(profileData) {
   const response = await fetch(`${API_BASE_URL}/employee-profile/save`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(profileData),
   });
 
@@ -163,7 +157,6 @@ export async function uploadCv(email, file) {
   return text;
 }
 
-
 export async function uploadPortfolio(email, file) {
   const formData = new FormData();
   formData.append("email", email);
@@ -182,10 +175,9 @@ export async function uploadPortfolio(email, file) {
 
   return text;
 }
+
 export async function getEmployeeProfile(email) {
-  const response = await fetch(
-    `http://localhost:8080/api/employee-profile/${email}`
-  );
+  const response = await fetch(`${API_BASE_URL}/employee-profile/${email}`);
 
   if (!response.ok) {
     throw new Error("Profili i punonjësit nuk u gjet.");
@@ -193,6 +185,7 @@ export async function getEmployeeProfile(email) {
 
   return response.json();
 }
+
 export async function getPendingSubscriptions() {
   const response = await fetch(`${API_BASE_URL}/packages/pending`);
 
@@ -230,10 +223,9 @@ export async function rejectSubscription(id) {
 
   return text;
 }
+
 export async function getEmployerSubscriptions(email) {
-  const response = await fetch(
-    `http://localhost:8080/api/packages/employer/${email}`
-  );
+  const response = await fetch(`${API_BASE_URL}/packages/employer/${email}`);
 
   if (!response.ok) {
     throw new Error("Gabim gjatë marrjes së paketave.");
