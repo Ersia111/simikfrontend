@@ -28,41 +28,51 @@ function EmployeeDashboard() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-useEffect(() => {
-  async function fetchApplications() {
-    try {
-      const data = await getApplicationsByEmployee(email);
-      setApplications(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoadingApplications(false);
+
+  useEffect(() => {
+    async function fetchApplications() {
+      try {
+        const data = await getApplicationsByEmployee(email);
+        setApplications(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoadingApplications(false);
+      }
     }
-  }
 
-  async function fetchProfile() {
-    try {
-      const data = await getEmployeeProfile(email);
+    async function fetchProfile() {
+      try {
+        const data = await getEmployeeProfile(email);
 
-      setProfileData({
-        employeeEmail: email || "",
-        fullName: data.fullName || "",
-        phoneNumber: data.phoneNumber || "",
-        profession: data.profession || "",
-        skills: data.skills || "",
-        bio: data.bio || "",
-      });
-    
-    } catch  {
-      console.log("Profili nuk ekziston ende.");
+        setProfileData({
+          employeeEmail: email || "",
+          fullName: data.fullName || "",
+          phoneNumber: data.phoneNumber || "",
+          profession: data.profession || "",
+          skills: data.skills || "",
+          bio: data.bio || "",
+        });
+      } catch {
+        console.log("Profili nuk ekziston ende.");
+      }
     }
-  }
 
-  if (email) {
-    fetchApplications();
-    fetchProfile();
-  }
-}, [email]);
+    if (email) {
+      fetchApplications();
+      fetchProfile();
+    }
+  }, [email]);
+
+  const profileCompletion = [
+    profileData.fullName,
+    profileData.phoneNumber,
+    profileData.profession,
+    profileData.skills,
+    profileData.bio,
+  ].filter(Boolean).length;
+
+  const completionPercentage = Math.round((profileCompletion / 5) * 100);
 
   function handleProfileChange(e) {
     const { name, value } = e.target;
@@ -136,13 +146,66 @@ useEffect(() => {
             </div>
           )}
 
+          <div className="mt-10 rounded-[2rem] border border-blue-300/10 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 p-8 backdrop-blur-xl">
+            <h2 className="text-2xl font-black">
+              Mirësevjen në profilin tënd profesional
+            </h2>
+
+            <p className="mt-3 max-w-2xl text-blue-100/70">
+              Plotëso profilin, ngarko CV dhe portfolio dhe rrit mundësitë për
+              t'u kontaktuar nga punëdhënësit.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
+            <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+              <p className="text-sm text-blue-100/60">Total Applications</p>
+              <h3 className="mt-3 text-4xl font-black">
+                {applications.length}
+              </h3>
+            </div>
+
+            <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+              <p className="text-sm text-blue-100/60">Profile Completion</p>
+              <h3 className="mt-3 text-4xl font-black">
+                {completionPercentage}%
+              </h3>
+            </div>
+
+            <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+              <p className="text-sm text-blue-100/60">Documents</p>
+              <h3 className="mt-3 text-4xl font-black">
+                {cvFile || portfolioFile ? "✓" : "-"}
+              </h3>
+            </div>
+          </div>
+
           <div className="mt-12 rounded-[2rem] border border-white/10 bg-white/10 p-8 shadow-2xl shadow-blue-950/20 backdrop-blur-xl">
             <h2 className="text-3xl font-black">Profili im</h2>
-            <p className="mt-3 text-blue-100/70">
-              Plotësoni profilin dhe ngarkoni dokumentet tuaja për t’u prezantuar më mirë te punëdhënësit.
+
+            <div className="mt-6">
+              <div className="mb-2 flex justify-between text-sm text-blue-100/70">
+                <span>Plotësimi i profilit</span>
+                <span>{completionPercentage}%</span>
+              </div>
+
+              <div className="h-3 overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-blue-400 transition-all duration-500"
+                  style={{ width: `${completionPercentage}%` }}
+                />
+              </div>
+            </div>
+
+            <p className="mt-6 text-blue-100/70">
+              Plotësoni profilin dhe ngarkoni dokumentet tuaja për t’u prezantuar
+              më mirë te punëdhënësit.
             </p>
 
-            <form onSubmit={handleSaveProfile} className="mt-8 grid gap-5 md:grid-cols-2">
+            <form
+              onSubmit={handleSaveProfile}
+              className="mt-8 grid gap-5 md:grid-cols-2"
+            >
               <input
                 name="fullName"
                 value={profileData.fullName}

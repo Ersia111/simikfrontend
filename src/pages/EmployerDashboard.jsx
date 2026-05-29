@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import PackageCard from "../components/PackageCard";
 import EmployerJobCard from "../components/EmployerJobCard";
@@ -70,6 +70,23 @@ function EmployerDashboard() {
   );
 
   const canPostJob = Boolean(approvedSubscription);
+
+  const postsLeft = approvedSubscription
+    ? approvedSubscription.subscriptionPackage?.maxPosts -
+      approvedSubscription.postsUsed
+    : 0;
+
+  const activePackageName = approvedSubscription
+    ? approvedSubscription.subscriptionPackage?.name
+    : pendingSubscription
+    ? "Në pritje"
+    : "Asnjë";
+
+  const totalApplicationsPreview = applications.length;
+
+  const latestJobs = useMemo(() => {
+    return [...jobs].reverse().slice(0, 3);
+  }, [jobs]);
 
   async function fetchSubscriptions() {
     if (!email) return;
@@ -192,24 +209,15 @@ function EmployerDashboard() {
   }
 
   function getStatusStyle(status) {
-    if (status === "APPROVED") {
-      return "bg-emerald-500/20 text-emerald-200";
-    }
-
-    if (status === "PENDING") {
-      return "bg-yellow-500/20 text-yellow-200";
-    }
-
-    if (status === "EXPIRED") {
-      return "bg-orange-500/20 text-orange-200";
-    }
-
+    if (status === "APPROVED") return "bg-emerald-500/20 text-emerald-200";
+    if (status === "PENDING") return "bg-yellow-500/20 text-yellow-200";
+    if (status === "EXPIRED") return "bg-orange-500/20 text-orange-200";
     return "bg-red-500/20 text-red-200";
   }
 
   function getPostingMessage() {
     if (canPostJob) {
-      return `Paketa aktive: ${approvedSubscription.subscriptionPackage?.name}. Mund të postoni njoftime.`;
+      return `Paketa aktive: ${approvedSubscription.subscriptionPackage?.name}. Ju kanë mbetur ${postsLeft} postime.`;
     }
 
     if (pendingSubscription) {
@@ -244,8 +252,8 @@ function EmployerDashboard() {
           </h1>
 
           <p className="mt-4 max-w-3xl text-blue-100/70">
-            Mirësevini, {email}. Këtu mund të kërkoni aktivizim pakete, të
-            postoni njoftime dhe të shihni aplikantët.
+            Mirësevini, {email}. Menaxhoni paketat, postoni njoftime dhe ndiqni
+            aplikantët nga një panel i vetëm.
           </p>
 
           {message && (
@@ -259,6 +267,43 @@ function EmployerDashboard() {
               {error}
             </div>
           )}
+
+          <div className="mt-10 rounded-[2rem] border border-blue-300/10 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 p-8 backdrop-blur-xl">
+            <h2 className="text-2xl font-black">
+              Paneli i punëdhënësit
+            </h2>
+
+            <p className="mt-3 max-w-2xl text-blue-100/70">
+              Këtu mund të kontrolloni statusin e paketës, numrin e postimeve
+              dhe aplikantët që kanë aplikuar për njoftimet tuaja.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-5 md:grid-cols-4">
+            <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+              <p className="text-sm text-blue-100/60">Total Jobs</p>
+              <h3 className="mt-3 text-4xl font-black">{jobs.length}</h3>
+            </div>
+
+            <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+              <p className="text-sm text-blue-100/60">Active Package</p>
+              <h3 className="mt-3 truncate text-2xl font-black">
+                {activePackageName}
+              </h3>
+            </div>
+
+            <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+              <p className="text-sm text-blue-100/60">Posts Left</p>
+              <h3 className="mt-3 text-4xl font-black">{postsLeft}</h3>
+            </div>
+
+            <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+              <p className="text-sm text-blue-100/60">Viewed Applications</p>
+              <h3 className="mt-3 text-4xl font-black">
+                {totalApplicationsPreview}
+              </h3>
+            </div>
+          </div>
 
           <div className="mt-12">
             <h2 className="text-3xl font-black">Zgjidh një paketë</h2>
@@ -358,10 +403,7 @@ function EmployerDashboard() {
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div>
                 <h2 className="text-3xl font-black">Krijo njoftim pune</h2>
-
-                <p className="mt-3 text-blue-100/70">
-                  {getPostingMessage()}
-                </p>
+                <p className="mt-3 text-blue-100/70">{getPostingMessage()}</p>
               </div>
 
               <span
@@ -440,7 +482,20 @@ function EmployerDashboard() {
           </div>
 
           <div className="mt-16">
-            <h2 className="text-3xl font-black">Njoftimet e mia</h2>
+            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h2 className="text-3xl font-black">Njoftimet e mia</h2>
+                <p className="mt-3 text-blue-100/70">
+                  Menaxhoni njoftimet që keni publikuar dhe shikoni aplikimet.
+                </p>
+              </div>
+
+              {latestJobs.length > 0 && (
+                <span className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-bold text-blue-100">
+                  {latestJobs.length} latest shown
+                </span>
+              )}
+            </div>
 
             {jobs.length === 0 ? (
               <div className="mt-6 rounded-[2rem] border border-white/10 bg-white/10 p-6 text-blue-100 backdrop-blur-xl">
