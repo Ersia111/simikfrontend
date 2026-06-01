@@ -1,75 +1,154 @@
-import { useEffect, useState } from "react";
-import bridge from "../assets/bridge.png";
+ 
+import { useEffect, useState, useRef } from "react";
+import leftHand from "../assets/lefthand.png";
+import rightHand from "../assets/righthand.png";
 
-function ScrollBridgeHero() {
+function ScrollHandsHero() {
   const [progress, setProgress] = useState(0);
+  const [burst, setBurst] = useState(false);
+  const connectedRef = useRef(false);
 
   useEffect(() => {
     function handleScroll() {
       const maxScroll = window.innerHeight * 0.65;
       const value = Math.min(window.scrollY / maxScroll, 1);
       setProgress(value);
+
+      if (value > 0.97 && !connectedRef.current) {
+        connectedRef.current = true;
+        setBurst(true);
+        setTimeout(() => setBurst(false), 800);
+      }
+      if (value < 0.9) connectedRef.current = false;
     }
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const moveX = progress * 520;
-  const moveY = Math.sin(progress * Math.PI) * -120;
+  // Lëvizja horizontale: nga jashtë drejt qendrës
+  const startOffset = 420; // sa larg fillojnë (px)
+  const endOffset = 0;     // ku ndalen (qendra)
+  const offset = startOffset - progress * (startOffset - endOffset);
+
+  // Hark i butë lart gjatë rrugës
+  const arcY = Math.sin(progress * Math.PI) * -40;
+
+  // Rotacion i lehtë kur afrohen
+  const rotL = progress * 8;
+  const rotR = progress * -8;
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#050b1a] text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_55%,rgba(37,99,235,0.45),transparent_45%)]" />
-      <div className="absolute left-[-220px] top-[-200px] h-[520px] w-[520px] rounded-full bg-blue-500/25 blur-[140px]" />
-      <div className="absolute bottom-[-220px] right-[-180px] h-[540px] w-[540px] rounded-full bg-indigo-500/25 blur-[150px]" />
+    <section className="relative min-h-screen overflow-hidden bg-[#050b1a] text-white flex flex-col items-center justify-center">
 
-      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-6 pt-16">
-        <div className="z-20 text-center">
-          <span className="inline-flex rounded-full border border-blue-300/20 bg-white/10 px-4 py-2 text-sm font-semibold text-blue-100 backdrop-blur">
-            Platformë për karriera në IT
+      {/* Background glows */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_55%,rgba(37,99,235,0.45),transparent_45%)] pointer-events-none" />
+      <div className="absolute top-[-120px] left-[-120px] h-[400px] w-[400px] rounded-full bg-blue-500/20 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-140px] right-[-100px] h-[440px] w-[440px] rounded-full bg-indigo-500/20 blur-[110px] pointer-events-none" />
+
+      {/* Hero text */}
+      <div className="relative z-20 text-center px-4">
+        <span className="inline-block rounded-full border border-blue-300/20 bg-white/8 backdrop-blur px-5 py-2 text-xs font-semibold tracking-widest uppercase text-blue-100">
+          Employee &bull; Employer &bull; Opportunities
+        </span>
+        <h1 className="mt-5 text-5xl md:text-7xl font-black tracking-tight leading-tight">
+          Connecting<br />
+          <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            IT Talent
           </span>
+        </h1>
+        <p className="mt-3 text-blue-100/75 text-base md:text-lg">
+          Where employers and employees come together<br />
+          to build the{" "}
+          <span className="text-blue-400">future of technology</span>.
+        </p>
+      </div>
 
-          <h1 className="mt-6 text-5xl font-black tracking-tight md:text-7xl">
-            Connecting IT Talent
-          </h1>
+      {/* Hands stage */}
+      <div className="relative z-10 w-full flex items-center justify-center mt-4"
+           style={{ height: "340px" }}>
 
-          <p className="mt-4 text-lg text-blue-100/75">
-            Where employees and employers meet.
-          </p>
+        {/* Burst flash kur bashkohen */}
+        <div
+          className="absolute z-30 rounded-full pointer-events-none"
+          style={{
+            width: "80px",
+            height: "80px",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            background: burst
+              ? "radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(120,180,255,0.6) 40%, transparent 70%)"
+              : "transparent",
+            transition: "background 0.1s",
+            scale: burst ? "4" : "1",
+            opacity: burst ? "1" : "0",
+            transitionDuration: burst ? "0.1s" : "0.5s",
+          }}
+        />
+
+        {/* Dora e majtë */}
+        <div
+          className="absolute pointer-events-none select-none"
+          style={{
+            left: "50%",
+            top: "50%",
+            transform: `translate(calc(-100% - ${offset}px), calc(-50% + ${arcY}px)) rotate(${rotL}deg)`,
+            transformOrigin: "right center",
+            transition: "transform 0.05s linear",
+          }}
+        >
+          <img
+            src={leftHand}
+            alt="Left hand"
+            style={{
+              width: "360px",
+              maxWidth: "45vw",
+              display: "block",
+              filter: `drop-shadow(0 0 ${18 + progress * 20}px rgba(96,165,250,${0.4 + progress * 0.5}))`,
+            }}
+          />
         </div>
 
-        <div className="relative mt-2 h-[520px] w-full">
+        {/* Dora e djathtë */}
+        <div
+          className="absolute pointer-events-none select-none"
+          style={{
+            left: "50%",
+            top: "50%",
+            transform: `translate(${offset}px, calc(-50% + ${arcY}px)) rotate(${rotR}deg)`,
+            transformOrigin: "left center",
+            transition: "transform 0.05s linear",
+          }}
+        >
           <img
-            src={bridge}
-            alt="Bridge"
-            className="absolute left-1/2 top-0 z-10 w-[980px] -translate-x-1/2 select-none opacity-95 drop-shadow-[0_50px_90px_rgba(59,130,246,0.35)]"
-          />
-
-          <div
+            src={rightHand}
+            alt="Right hand"
             style={{
-              transform: `translate(${moveX}px, ${moveY}px)`,
+              width: "360px",
+              maxWidth: "45vw",
+              display: "block",
+              filter: `drop-shadow(0 0 ${18 + progress * 20}px rgba(167,139,250,${0.4 + progress * 0.5}))`,
             }}
-            className="absolute left-[20%] top-[63%] z-30 transition-transform duration-75"
-          >
-            <div className="flex flex-col items-center">
-              <div className="h-14 w-14 rounded-full bg-cyan-400 shadow-[0_0_45px_rgba(34,211,238,0.9)]" />
-              <p className="mt-2 text-sm font-bold">Employee</p>
-            </div>
-          </div>
-
-          <div className="absolute right-[18%] top-[52%] z-30">
-            <div className="flex flex-col items-center">
-              <div className="h-14 w-14 rounded-full bg-blue-300 shadow-[0_0_45px_rgba(147,197,253,0.9)]" />
-              <p className="mt-2 text-sm font-bold">Employer</p>
-            </div>
-          </div>
+          />
         </div>
       </div>
+
+      {/* Scroll hint */}
+      <div className="relative z-20 flex flex-col items-center gap-1 mt-2 text-blue-300/70 text-[11px] uppercase tracking-widest">
+        <span>Scroll down</span>
+        <div className="w-px h-7 bg-gradient-to-b from-transparent via-blue-300/50 to-transparent" />
+        <div className="w-5 h-7 rounded-xl border border-blue-300/40 flex justify-center pt-1">
+          <div className="w-[3px] h-2 rounded-full bg-blue-300/80 animate-bounce" />
+        </div>
+        <div className="w-px h-7 bg-gradient-to-b from-transparent via-blue-300/50 to-transparent" />
+        <span className="text-blue-400">to connect</span>
+      </div>
+
+    
     </section>
   );
 }
 
-export default ScrollBridgeHero;
+export default ScrollHandsHero;
