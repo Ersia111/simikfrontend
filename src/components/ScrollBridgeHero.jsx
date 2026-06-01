@@ -1,4 +1,3 @@
- 
 import { useEffect, useState, useRef } from "react";
 import leftHand from "../assets/lefthand.png";
 import rightHand from "../assets/righthand.png";
@@ -6,7 +5,22 @@ import rightHand from "../assets/righthand.png";
 function ScrollHandsHero() {
   const [progress, setProgress] = useState(0);
   const [burst, setBurst] = useState(false);
+  const [startOffset, setStartOffset] = useState(280);
   const connectedRef = useRef(false);
+
+  // startOffset dinamik bazuar në madhësinë e ekranit
+  useEffect(() => {
+    function updateOffset() {
+      const w = window.innerWidth;
+      if (w < 480) setStartOffset(100);       // mobile i vogël — shumë afër
+      else if (w < 768) setStartOffset(150);  // mobile i madh
+      else if (w < 1024) setStartOffset(220); // tablet
+      else setStartOffset(280);               // desktop
+    }
+    updateOffset();
+    window.addEventListener("resize", updateOffset);
+    return () => window.removeEventListener("resize", updateOffset);
+  }, []);
 
   useEffect(() => {
     function handleScroll() {
@@ -27,17 +41,18 @@ function ScrollHandsHero() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Lëvizja horizontale: nga jashtë drejt qendrës
-  const startOffset = 420; // sa larg fillojnë (px)
-  const endOffset = 0;     // ku ndalen (qendra)
-  const offset = startOffset - progress * (startOffset - endOffset);
-
-  // Hark i butë lart gjatë rrugës
-  const arcY = Math.sin(progress * Math.PI) * -40;
-
-  // Rotacion i lehtë kur afrohen
+  const offset = startOffset - progress * startOffset;
+  const arcY = Math.sin(progress * Math.PI) * -30;
   const rotL = progress * 8;
   const rotR = progress * -8;
+
+  // madhësia e duarve dinamike
+  const handSize = typeof window !== "undefined"
+    ? window.innerWidth < 480 ? "160px"
+    : window.innerWidth < 768 ? "220px"
+    : window.innerWidth < 1024 ? "280px"
+    : "340px"
+    : "340px";
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-[#050b1a] text-white flex flex-col items-center justify-center">
@@ -66,10 +81,11 @@ function ScrollHandsHero() {
       </div>
 
       {/* Hands stage */}
-      <div className="relative z-10 w-full flex items-center justify-center mt-4"
-           style={{ height: "340px" }}>
-
-        {/* Burst flash kur bashkohen */}
+      <div
+        className="relative z-10 w-full flex items-center justify-center mt-4"
+        style={{ height: "260px" }}
+      >
+        {/* Burst */}
         <div
           className="absolute z-30 rounded-full pointer-events-none"
           style={{
@@ -81,10 +97,9 @@ function ScrollHandsHero() {
             background: burst
               ? "radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(120,180,255,0.6) 40%, transparent 70%)"
               : "transparent",
-            transition: "background 0.1s",
             scale: burst ? "4" : "1",
             opacity: burst ? "1" : "0",
-            transitionDuration: burst ? "0.1s" : "0.5s",
+            transition: burst ? "all 0.1s" : "all 0.5s",
           }}
         />
 
@@ -96,17 +111,16 @@ function ScrollHandsHero() {
             top: "50%",
             transform: `translate(calc(-100% - ${offset}px), calc(-50% + ${arcY}px)) rotate(${rotL}deg)`,
             transformOrigin: "right center",
-            transition: "transform 0.05s linear",
           }}
         >
           <img
             src={leftHand}
             alt="Left hand"
             style={{
-              width: "360px",
-              maxWidth: "45vw",
+              width: handSize,
+              maxWidth: "44vw",
               display: "block",
-              filter: `drop-shadow(0 0 ${18 + progress * 20}px rgba(96,165,250,${0.4 + progress * 0.5}))`,
+              filter: `drop-shadow(0 0 ${14 + progress * 18}px rgba(96,165,250,${0.5 + progress * 0.4}))`,
             }}
           />
         </div>
@@ -119,17 +133,16 @@ function ScrollHandsHero() {
             top: "50%",
             transform: `translate(${offset}px, calc(-50% + ${arcY}px)) rotate(${rotR}deg)`,
             transformOrigin: "left center",
-            transition: "transform 0.05s linear",
           }}
         >
           <img
             src={rightHand}
             alt="Right hand"
             style={{
-              width: "360px",
-              maxWidth: "45vw",
+              width: handSize,
+              maxWidth: "44vw",
               display: "block",
-              filter: `drop-shadow(0 0 ${18 + progress * 20}px rgba(167,139,250,${0.4 + progress * 0.5}))`,
+              filter: `drop-shadow(0 0 ${14 + progress * 18}px rgba(167,139,250,${0.5 + progress * 0.4}))`,
             }}
           />
         </div>
@@ -146,7 +159,6 @@ function ScrollHandsHero() {
         <span className="text-blue-400">to connect</span>
       </div>
 
-    
     </section>
   );
 }
