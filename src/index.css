@@ -4,12 +4,16 @@
   box-sizing: border-box;
 }
 
+html {
+  background-color: #050b1a;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: #050b1a;
+  color: #ffffff;
   font-family: Arial, sans-serif;
 }
 .hero-grid {
