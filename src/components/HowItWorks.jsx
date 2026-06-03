@@ -4,306 +4,251 @@ function HowItWorks() {
   const steps = [
     {
       number: "01",
+      label: "Employee",
       title: "Krijo profilin",
-      text: "Punonjësi regjistrohet, plotëson profilin profesional dhe ngarkon CV ose portfolio.",
-      icon: "1",
-      glow: "rgba(96,165,250,0.2)",
-      border: "rgba(96,165,250,0.3)",
+      text: "Punonjësi ndërton profilin profesional me aftësi, CV dhe portfolio.",
+      meta: ["CV", "Portfolio", "Skills"],
+      glow: "rgba(96,165,250,0.22)",
+      border: "rgba(96,165,250,0.32)",
       color: "#60a5fa",
     },
     {
       number: "02",
-      title: "Publiko mundësi",
-      text: "Punëdhënësi zgjedh paketën dhe publikon njoftime pune për pozicione në IT.",
-      icon: "2",
-      glow: "rgba(167,139,250,0.2)",
-      border: "rgba(167,139,250,0.3)",
+      label: "Opportunity",
+      title: "Apliko ose publiko mundësi",
+      text: "Punëdhënësi publikon pozicione, ndërsa kandidati aplikon në mundësitë që i përshtaten.",
+      meta: ["Jobs", "Criteria", "Apply"],
+      glow: "rgba(167,139,250,0.22)",
+      border: "rgba(167,139,250,0.32)",
       color: "#a78bfa",
     },
     {
       number: "03",
-      title: "Lidhu me kandidatët",
-      text: "Platforma i afron të dyja palët në një proces më të qartë dhe më të strukturuar.",
-      icon: "3",
-      glow: "rgba(99,102,241,0.2)",
-      border: "rgba(99,102,241,0.3)",
+      label: "Connection",
+      title: "Lidhu me kandidatin",
+      text: "Platforma ndihmon që lidhja mes talentit dhe kompanisë të jetë më e qartë dhe profesionale.",
+      meta: ["Match", "Status", "Contact"],
+      glow: "rgba(99,102,241,0.22)",
+      border: "rgba(99,102,241,0.32)",
       color: "#818cf8",
     },
   ];
 
   const [active, setActive] = useState(0);
-  const [animated, setAnimated] = useState(false);
+  const [visible, setVisible] = useState(false);
   const sectionRef = useRef(null);
-  const cardRefs = useRef([]);
 
   useEffect(() => {
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setAnimated(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.2 }
+    const observer = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0.25 }
     );
-    if (sectionRef.current) obs.observe(sectionRef.current);
-    return () => obs.disconnect();
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+
+    return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!animated) return;
-    const interval = setInterval(() => {
-      setActive((prev) => (prev + 1) % steps.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [animated]);
+  function handleMouseMove(event) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const percent = x / rect.width;
+
+    if (percent < 0.34) setActive(0);
+    else if (percent < 0.67) setActive(1);
+    else setActive(2);
+  }
 
   return (
     <section
       ref={sectionRef}
-      className="relative px-6 pb-32 pt-10 text-white overflow-hidden"
-      style={{ background: "#050b1a" }}
+      onMouseMove={handleMouseMove}
+      className="relative overflow-hidden px-6 pb-36 pt-16 text-white"
     >
-      {/* Background glows */}
+      <div className="pointer-events-none absolute inset-0 bg-[#050b1a]" />
+
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at 50% 0%, rgba(37,99,235,0.15) 0%, transparent 60%)",
+            "radial-gradient(circle at 50% 0%, rgba(37,99,235,0.15), transparent 48%), radial-gradient(circle at 15% 70%, rgba(96,165,250,0.10), transparent 38%), radial-gradient(circle at 85% 70%, rgba(167,139,250,0.10), transparent 38%)",
         }}
       />
-      <div
-        className="pointer-events-none absolute left-[-100px] top-[-60px] h-[300px] w-[300px] rounded-full blur-[90px]"
-        style={{ background: "rgba(59,130,246,0.1)" }}
-      />
-      <div
-        className="pointer-events-none absolute right-[-100px] bottom-[-60px] h-[300px] w-[300px] rounded-full blur-[90px]"
-        style={{ background: "rgba(99,102,241,0.1)" }}
-      />
 
-      {/* Divider */}
-      <div className="mx-auto mb-16 max-w-xs">
-        <div
-          className="h-px w-full"
-          style={{
-            background:
-              "linear-gradient(to right, transparent, rgba(96,165,250,0.4), transparent)",
-          }}
-        />
-      </div>
-
-      <div className="relative mx-auto max-w-5xl">
-        {/* Header */}
-        <div className="mb-14 text-center">
-          <p
-            className="text-xs font-semibold uppercase tracking-widest"
-            style={{ color: "rgba(147,197,253,0.6)" }}
-          >
+      <div className="relative mx-auto max-w-7xl">
+        <div className="mx-auto mb-16 max-w-3xl text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-blue-300/60">
             How it works
           </p>
-          <h2 className="mt-3 text-3xl font-black md:text-4xl">
-            Një proces i thjeshtë,{" "}
-            <span
-              style={{
-                background: "linear-gradient(90deg, #60a5fa, #a78bfa)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              nga profili te aplikimi
+
+          <h2 className="mt-4 text-3xl font-black leading-tight md:text-5xl">
+            Nga profili te lidhja,{" "}
+            <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-400 bg-clip-text text-transparent">
+              çdo hap ndërton urën
             </span>
           </h2>
+
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-blue-100/60 md:text-base">
+            Lëvize mausin nga e majta në të djathtë për të parë procesin hap pas hapi.
+          </p>
         </div>
 
-        {/* Diagram */}
-        <div className="relative flex flex-col items-center gap-0 md:flex-row md:items-stretch md:justify-center">
+        <div className="grid gap-8 md:grid-cols-3">
+          {steps.map((step, index) => {
+            const isActive = active === index;
+            const isPassed = active > index;
 
-          {steps.map((step, i) => (
-            <div key={step.number} className="flex flex-col items-center md:flex-row md:items-stretch">
-
-              {/* Karta */}
+            return (
               <div
-                ref={(el) => (cardRefs.current[i] = el)}
-                onClick={() => setActive(i)}
+                key={step.number}
+                className="relative"
                 style={{
-                  opacity: animated ? 1 : 0,
-                  transform: animated ? "translateY(0)" : "translateY(40px)",
-                  transition: `opacity 0.6s ease ${i * 0.18}s, transform 0.6s ease ${i * 0.18}s`,
-                  borderRadius: "1.5rem",
-                  border: `1.5px solid ${active === i ? step.border : "rgba(255,255,255,0.08)"}`,
-                  background:
-                    active === i
-                      ? `radial-gradient(circle at 30% 20%, ${step.glow}, rgba(255,255,255,0.04) 70%)`
-                      : "rgba(255,255,255,0.03)",
-                  backdropFilter: "blur(16px)",
-                  padding: "2rem 1.75rem",
-                  width: "220px",
-                  cursor: "pointer",
-                  position: "relative",
-                  overflow: "hidden",
-                  boxShadow:
-                    active === i
-                      ? `0 0 40px ${step.glow}, 0 8px 32px rgba(0,0,0,0.3)`
-                      : "0 4px 24px rgba(0,0,0,0.2)",
+                  opacity: visible ? 1 : 0,
+                  transform: visible
+                    ? isActive
+                      ? "translateY(-18px) scale(1.06)"
+                      : "translateY(0px) scale(1)"
+                    : `translateY(${50 + index * 14}px)`,
+                  transition: `opacity 0.7s ease ${
+                    index * 0.15
+                  }s, transform 0.55s ease`,
                 }}
               >
-                {/* Glow brenda */}
-                {active === i && (
+                <button
+                  type="button"
+                  onClick={() => setActive(index)}
+                  className="group relative w-full text-left"
+                >
                   <div
+                    className="relative min-h-[360px] overflow-hidden rounded-[2.4rem] border p-9 shadow-2xl backdrop-blur-xl transition duration-500"
                     style={{
-                      position: "absolute",
-                      top: "-30px",
-                      right: "-30px",
-                      width: "100px",
-                      height: "100px",
-                      borderRadius: "50%",
-                      background: step.glow,
-                      filter: "blur(30px)",
-                      pointerEvents: "none",
+                      borderColor:
+                        isActive || isPassed
+                          ? step.border
+                          : "rgba(255,255,255,0.09)",
+                      background:
+                        isActive || isPassed
+                          ? `radial-gradient(circle at 30% 20%, ${step.glow}, rgba(255,255,255,0.045) 65%)`
+                          : "rgba(255,255,255,0.035)",
+                      boxShadow: isActive
+                        ? `0 35px 110px rgba(0,0,0,0.45), 0 0 65px ${step.glow}`
+                        : "0 25px 80px rgba(0,0,0,0.32)",
                     }}
-                  />
-                )}
-
-                {/* Numri */}
-                <div
-                  className="text-xs font-bold uppercase tracking-widest mb-4"
-                  style={{ color: active === i ? step.color : "rgba(255,255,255,0.25)" }}
-                >
-                  {step.number}
-                </div>
-
-                {/* Ikona */}
-                <div
-                  className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl text-2xl"
-                  style={{
-                    background: active === i ? step.glow : "rgba(255,255,255,0.05)",
-                    border: `1px solid ${active === i ? step.border : "rgba(255,255,255,0.08)"}`,
-                    transition: "background 0.4s, border 0.4s",
-                  }}
-                >
-                  {step.icon}
-                </div>
-
-                <h3
-                  className="text-base font-black mb-3"
-                  style={{ color: active === i ? "#fff" : "rgba(255,255,255,0.6)" }}
-                >
-                  {step.title}
-                </h3>
-
-                <p
-                  className="text-xs leading-6"
-                  style={{
-                    color: active === i ? "rgba(191,219,254,0.75)" : "rgba(255,255,255,0.3)",
-                    transition: "color 0.4s",
-                  }}
-                >
-                  {step.text}
-                </p>
-
-                {/* Progress bar poshtë */}
-                {active === i && (
-                  <div
-                    className="absolute bottom-0 left-0 right-0 h-[3px] rounded-b-3xl overflow-hidden"
-                    style={{ background: "rgba(255,255,255,0.08)" }}
                   >
                     <div
+                      className="absolute right-[-70px] top-[-70px] h-52 w-52 rounded-full blur-[75px]"
                       style={{
-                        height: "100%",
-                        background: `linear-gradient(90deg, ${step.color}, transparent)`,
-                        animation: "progressbar 3s linear forwards",
+                        background: isActive
+                          ? step.glow
+                          : "rgba(255,255,255,0.04)",
                       }}
                     />
+
+                    <div className="relative mb-10 flex items-center justify-between">
+                      <div
+                        className="flex h-16 w-16 items-center justify-center rounded-2xl border text-base font-black"
+                        style={{
+                          borderColor:
+                            isActive || isPassed
+                              ? step.border
+                              : "rgba(255,255,255,0.1)",
+                          color:
+                            isActive || isPassed
+                              ? step.color
+                              : "rgba(255,255,255,0.35)",
+                          background:
+                            isActive || isPassed
+                              ? "rgba(255,255,255,0.06)"
+                              : "rgba(255,255,255,0.03)",
+                        }}
+                      >
+                        {step.number}
+                      </div>
+
+                      <span
+                        className="rounded-full border px-4 py-2 text-[10px] font-bold uppercase tracking-[0.25em]"
+                        style={{
+                          borderColor:
+                            isActive || isPassed
+                              ? step.border
+                              : "rgba(255,255,255,0.08)",
+                          color:
+                            isActive || isPassed
+                              ? step.color
+                              : "rgba(255,255,255,0.35)",
+                        }}
+                      >
+                        {step.label}
+                      </span>
+                    </div>
+
+                    <h3
+                      className="relative text-2xl font-black"
+                      style={{
+                        color:
+                          isActive || isPassed
+                            ? "#ffffff"
+                            : "rgba(255,255,255,0.65)",
+                      }}
+                    >
+                      {step.title}
+                    </h3>
+
+                    <p
+                      className="relative mt-5 text-sm leading-8"
+                      style={{
+                        color: isActive
+                          ? "rgba(191,219,254,0.82)"
+                          : "rgba(191,219,254,0.50)",
+                      }}
+                    >
+                      {step.text}
+                    </p>
+
+                    <div className="relative mt-7 flex flex-wrap gap-2">
+                      {step.meta.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[11px] font-semibold text-blue-100/60"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="relative mt-9 h-1 overflow-hidden rounded-full bg-white/10">
+                      <div
+                        className="h-full rounded-full transition-all duration-700"
+                        style={{
+                          width: isActive || isPassed ? "100%" : "0%",
+                          background: `linear-gradient(90deg, ${step.color}, transparent)`,
+                        }}
+                      />
+                    </div>
                   </div>
-                )}
+                </button>
               </div>
-
-              {/* Lidhësi midis kartave */}
-              {i < steps.length - 1 && (
-                <div className="flex items-center justify-center md:px-2">
-                  {/* vertical (mobile) */}
-                  <div
-                    className="flex md:hidden flex-col items-center py-2 gap-1"
-                  >
-                    {[0, 1, 2].map((d) => (
-                      <div
-                        key={d}
-                        style={{
-                          width: "2px",
-                          height: "10px",
-                          borderRadius: "2px",
-                          background:
-                            active > i
-                              ? steps[i].color
-                              : "rgba(255,255,255,0.12)",
-                          transition: "background 0.4s",
-                          transitionDelay: `${d * 0.08}s`,
-                        }}
-                      />
-                    ))}
-                  </div>
-                  {/* horizontal (desktop) */}
-                  <div className="hidden md:flex items-center gap-1 px-1">
-                    {[0, 1, 2, 3].map((d) => (
-                      <div
-                        key={d}
-                        style={{
-                          width: "10px",
-                          height: "2px",
-                          borderRadius: "2px",
-                          background:
-                            active > i
-                              ? steps[i].color
-                              : "rgba(255,255,255,0.12)",
-                          transition: "background 0.4s",
-                          transitionDelay: `${d * 0.06}s`,
-                        }}
-                      />
-                    ))}
-                    <div
-                      style={{
-                        width: 0,
-                        height: 0,
-                        borderTop: "5px solid transparent",
-                        borderBottom: "5px solid transparent",
-                        borderLeft: `7px solid ${active > i ? steps[i].color : "rgba(255,255,255,0.12)"}`,
-                        transition: "border-left-color 0.4s",
-                      }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Dot navigimi poshtë */}
-        <div className="mt-10 flex justify-center gap-3">
-          {steps.map((step, i) => (
+        <div className="mt-12 flex justify-center gap-3">
+          {steps.map((step, index) => (
             <button
-              key={i}
-              onClick={() => setActive(i)}
+              key={step.number}
+              type="button"
+              onClick={() => setActive(index)}
+              className="h-2 rounded-full transition-all duration-300"
               style={{
-                width: active === i ? "28px" : "8px",
-                height: "8px",
-                borderRadius: "4px",
-                background: active === i ? step.color : "rgba(255,255,255,0.2)",
-                border: "none",
-                cursor: "pointer",
-                transition: "width 0.4s, background 0.4s",
-                padding: 0,
+                width: active === index ? "32px" : "9px",
+                background:
+                  active === index ? step.color : "rgba(255,255,255,0.2)",
               }}
+              aria-label={`Step ${index + 1}`}
             />
           ))}
         </div>
       </div>
-
-      <style>{`
-        @keyframes progressbar {
-          from { width: 0%; }
-          to { width: 100%; }
-        }
-      `}</style>
     </section>
   );
 }

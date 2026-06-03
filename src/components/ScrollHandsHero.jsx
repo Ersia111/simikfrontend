@@ -9,7 +9,7 @@ import rightHand from "../assets/righthand.png";
 function ScrollHandsHero() {
   const [progress, setProgress] = useState(0);
   const [burst, setBurst] = useState(false);
-  const [startOffset, setStartOffset] = useState(280);
+  const [startOffset, setStartOffset] = useState(260);
 
   const connectedRef = useRef(false);
 
@@ -17,10 +17,10 @@ function ScrollHandsHero() {
     function updateOffset() {
       const width = window.innerWidth;
 
-      if (width < 480) setStartOffset(100);
-      else if (width < 768) setStartOffset(150);
-      else if (width < 1024) setStartOffset(220);
-      else setStartOffset(280);
+      if (width < 480) setStartOffset(85);
+      else if (width < 768) setStartOffset(130);
+      else if (width < 1024) setStartOffset(200);
+      else setStartOffset(260);
     }
 
     updateOffset();
@@ -55,20 +55,20 @@ function ScrollHandsHero() {
   }, []);
 
   const offset = startOffset - progress * startOffset;
-  const arcY = Math.sin(progress * Math.PI) * -30;
-  const rotateLeft = progress * 8;
-  const rotateRight = progress * -8;
+  const arcY = Math.sin(progress * Math.PI) * -24;
+  const rotateLeft = progress * 7;
+  const rotateRight = progress * -7;
 
   const handSize =
     typeof window !== "undefined"
       ? window.innerWidth < 480
-        ? "160px"
+        ? "145px"
         : window.innerWidth < 768
-        ? "220px"
+        ? "200px"
         : window.innerWidth < 1024
-        ? "280px"
-        : "340px"
-      : "340px";
+        ? "260px"
+        : "320px"
+      : "320px";
 
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden text-white">
@@ -78,14 +78,14 @@ function ScrollHandsHero() {
         </Canvas>
       </div>
 
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_50%_50%,rgba(5,11,26,0)_25%,rgba(5,11,26,0.95)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_50%_45%,rgba(5,11,26,0)_20%,rgba(5,11,26,0.92)_100%)]" />
 
-      <div className="relative z-20 px-4 text-center">
+      <div className="relative z-20 -mt-10 px-4 text-center md:-mt-16">
         <span className="inline-block rounded-full border border-blue-300/20 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-widest text-blue-100 backdrop-blur">
           Employee &bull; Employer &bull; Opportunities
         </span>
 
-        <h1 className="mt-5 text-5xl font-black leading-tight tracking-tight md:text-7xl">
+        <h1 className="mt-4 text-5xl font-black leading-[0.95] tracking-tight md:text-7xl">
           Connecting
           <br />
           <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
@@ -93,13 +93,13 @@ function ScrollHandsHero() {
           </span>
         </h1>
 
-        <p className="mt-3 text-base text-blue-100/75 md:text-lg">
+        <p className="mt-4 text-base leading-7 text-blue-100/75 md:text-lg">
           Where employers and employees come together
           <br />
           to build the <span className="text-blue-400">future of technology</span>.
         </p>
 
-        <div className="mt-7 flex flex-wrap justify-center gap-4">
+        <div className="mt-6 flex flex-wrap justify-center gap-4">
           <Link
             to="/jobs"
             className="rounded-full bg-white px-7 py-3 font-bold text-[#050b1a] shadow-lg shadow-blue-500/30 transition hover:scale-105 hover:bg-blue-100"
@@ -117,8 +117,8 @@ function ScrollHandsHero() {
       </div>
 
       <div
-        className="relative z-10 mt-4 flex w-full items-center justify-center"
-        style={{ height: "260px" }}
+        className="relative z-10 mt-2 flex w-full items-center justify-center"
+        style={{ height: "220px" }}
       >
         <div
           className="pointer-events-none absolute z-30 rounded-full"
@@ -141,7 +141,7 @@ function ScrollHandsHero() {
           className="pointer-events-none absolute select-none"
           style={{
             left: "50%",
-            top: "50%",
+            top: "46%",
             transform: `translate(calc(-100% - ${offset}px), calc(-50% + ${arcY}px)) rotate(${rotateLeft}deg)`,
             transformOrigin: "right center",
           }}
@@ -151,7 +151,7 @@ function ScrollHandsHero() {
             alt="Left hand"
             style={{
               width: handSize,
-              maxWidth: "44vw",
+              maxWidth: "42vw",
               display: "block",
               filter: `drop-shadow(0 0 ${
                 14 + progress * 18
@@ -164,7 +164,7 @@ function ScrollHandsHero() {
           className="pointer-events-none absolute select-none"
           style={{
             left: "50%",
-            top: "50%",
+            top: "46%",
             transform: `translate(${offset}px, calc(-50% + ${arcY}px)) rotate(${rotateRight}deg)`,
             transformOrigin: "left center",
           }}
@@ -174,7 +174,7 @@ function ScrollHandsHero() {
             alt="Right hand"
             style={{
               width: handSize,
-              maxWidth: "44vw",
+              maxWidth: "42vw",
               display: "block",
               filter: `drop-shadow(0 0 ${
                 14 + progress * 18
@@ -184,7 +184,7 @@ function ScrollHandsHero() {
         </div>
       </div>
 
-      <div className="absolute bottom-6 z-20 flex flex-col items-center gap-1 text-[11px] uppercase tracking-widest text-blue-300/50">
+      <div className="absolute bottom-20 z-20 flex flex-col items-center gap-1 text-[11px] uppercase tracking-widest text-blue-300/50">
         <span>Scroll down</span>
 
         <div className="flex h-6 w-4 justify-center rounded-xl border border-blue-300/30 pt-1">
@@ -193,9 +193,10 @@ function ScrollHandsHero() {
       </div>
 
       <div
-        className="pointer-events-none absolute bottom-0 left-0 right-0 z-20 h-40"
+        className="pointer-events-none absolute bottom-[-1px] left-0 right-0 z-20 h-72"
         style={{
-          background: "linear-gradient(to bottom, transparent, rgba(5,11,26,1))",
+          background:
+            "linear-gradient(to bottom, rgba(5,11,26,0) 0%, rgba(5,11,26,0.25) 32%, rgba(5,11,26,0.72) 68%, rgba(5,11,26,1) 100%)",
         }}
       />
     </section>
