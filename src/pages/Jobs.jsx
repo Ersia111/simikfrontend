@@ -13,7 +13,6 @@ function Jobs() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("ALL");
-  const [showSavedOnly, setShowSavedOnly] = useState(false);
 
   useEffect(() => {
     async function fetchJobs() {
@@ -57,12 +56,9 @@ function Jobs() {
       const matchesCategory =
         category === "ALL" || text.includes(category.toLowerCase());
 
-      const matchesSaved =
-        !showSavedOnly || savedJobs.includes(job.id);
-
-      return matchesSearch && matchesCategory && matchesSaved;
+      return matchesSearch && matchesCategory;
     });
-  }, [jobs, searchTerm, category, showSavedOnly, savedJobs]);
+  }, [jobs, searchTerm, category]);
 
   function handleSaveJob(jobId) {
     let updatedSavedJobs;
@@ -105,62 +101,65 @@ function Jobs() {
 
   return (
     <MainLayout>
-      <section className="relative min-h-screen overflow-hidden bg-[#050b1a] px-6 py-20 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_15%,rgba(96,165,250,0.35),transparent_32%),radial-gradient(circle_at_10%_75%,rgba(37,99,235,0.22),transparent_38%)]" />
-        <div className="absolute left-[-180px] top-[-180px] h-[480px] w-[480px] rounded-full bg-blue-500/25 blur-[130px]" />
-        <div className="absolute bottom-[-180px] right-[-180px] h-[520px] w-[520px] rounded-full bg-indigo-500/25 blur-[140px]" />
+      <section className="relative min-h-screen overflow-hidden bg-[#020617] px-6 pb-24 pt-28 text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(147,51,234,0.26),transparent_28%),radial-gradient(circle_at_70%_25%,rgba(59,130,246,0.24),transparent_35%),radial-gradient(circle_at_15%_75%,rgba(37,99,235,0.18),transparent_38%)]" />
+        <div className="absolute inset-0 jobs-stars opacity-70" />
+        <div className="absolute right-[-140px] top-[80px] h-[620px] w-[780px] rounded-full bg-violet-500/20 blur-[140px]" />
+        <div className="absolute left-[-180px] top-[260px] h-[520px] w-[520px] rounded-full bg-blue-500/20 blur-[130px]" />
 
         <div className="relative z-10 mx-auto max-w-7xl">
-          <div className="mb-10 max-w-3xl">
-            <span className="inline-flex rounded-full border border-blue-300/20 bg-white/10 px-4 py-2 text-sm font-semibold text-blue-100 backdrop-blur">
-              Mundësi pune në teknologji
-            </span>
+          <div className="relative overflow-hidden rounded-b-[3rem] border-b border-white/10 pb-10 pt-10">
+            <div className="absolute right-[-80px] top-[-40px] hidden h-[520px] w-[760px] lg:block">
+              <div className="cosmic-orb relative h-full w-full" />
+            </div>
 
-            <h1 className="mt-6 text-5xl font-black tracking-tight md:text-6xl">
-              Njoftimet e Punës
-            </h1>
+            <div className="relative z-10 max-w-2xl">
+              <span className="inline-flex rounded-full border border-white/10 bg-white/10 px-5 py-2 text-sm font-bold text-blue-100 backdrop-blur-xl">
+                ✦ E ardhmja fillon këtu
+              </span>
 
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-blue-100/70">
-              Eksploro mundësitë më të fundit në Programim, IT, Marketing
-              Digjital, Content Creation dhe Graphic Design.
-            </p>
+              <h1 className="mt-7 text-6xl font-black leading-[0.95] tracking-tight md:text-7xl">
+                Njoftimet <br />
+                <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-violet-400 bg-clip-text text-transparent">
+                  e Punës
+                </span>
+              </h1>
+
+              <p className="mt-7 max-w-2xl text-lg leading-8 text-blue-100/75">
+                Zbulo mundësitë më të fundit në Programim, IT, Marketing
+                Digjital, Content Creation dhe Graphic Design.
+              </p>
+            </div>
           </div>
 
-          <div className="mb-10 rounded-[2rem] border border-white/10 bg-white/10 p-5 shadow-2xl shadow-blue-950/20 backdrop-blur-xl">
-            <div className="grid gap-4 md:grid-cols-[1.5fr_1fr_auto]">
+          <div className="mb-8 mt-8 rounded-[2rem] border border-white/10 bg-white/[0.07] p-6 shadow-2xl shadow-blue-950/20 backdrop-blur-2xl">
+            <div className="grid gap-4 md:grid-cols-[1.2fr_1fr_auto]">
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Kërko sipas titullit, skills, kompanisë..."
-                className="w-full rounded-2xl border border-white/10 bg-[#0c1f44]/70 px-5 py-4 text-white outline-none placeholder:text-blue-100/40 focus:border-blue-300"
+                className="w-full rounded-2xl border border-blue-300/20 bg-[#07152f]/70 px-5 py-4 text-white outline-none placeholder:text-blue-100/40 focus:border-blue-300"
               />
 
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full rounded-2xl border border-white/10 bg-[#0c1f44]/70 px-5 py-4 text-white outline-none focus:border-blue-300"
+                className="w-full rounded-2xl border border-blue-300/20 bg-[#07152f]/70 px-5 py-4 text-white outline-none focus:border-blue-300"
               >
                 {categories.map((cat) => (
-                  <option key={cat} value={cat} className="bg-[#0c1f44]">
+                  <option key={cat} value={cat} className="bg-[#07152f]">
                     {cat === "ALL" ? "Të gjitha kategoritë" : cat}
                   </option>
                 ))}
               </select>
 
-              <button
-                onClick={() => setShowSavedOnly((prev) => !prev)}
-                className={`rounded-2xl px-5 py-4 text-sm font-bold ${
-                  showSavedOnly
-                    ? "bg-white text-[#07152f]"
-                    : "border border-white/10 bg-[#0c1f44]/70 text-white"
-                }`}
-              >
-                Saved
+              <button className="rounded-2xl bg-gradient-to-r from-blue-500 to-violet-500 px-8 py-4 text-sm font-black text-white shadow-xl shadow-blue-500/25">
+                Search
               </button>
             </div>
 
-            <p className="mt-4 text-sm text-blue-100/60">
+            <p className="mt-5 text-sm text-blue-100/70">
               U gjetën {filteredJobs.length} nga {jobs.length} njoftime.
             </p>
           </div>
@@ -199,7 +198,7 @@ function Jobs() {
 
         {selectedJob && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6 backdrop-blur-sm">
-            <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] border border-white/10 bg-[#0c1f44] p-8 text-white shadow-2xl">
+            <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] border border-white/10 bg-[#07152f] p-8 text-white shadow-2xl">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <span className="rounded-full bg-blue-400/15 px-3 py-1 text-xs font-bold uppercase tracking-widest text-blue-200">
@@ -211,7 +210,8 @@ function Jobs() {
                   </h2>
 
                   <p className="mt-2 text-sm text-blue-100/60">
-                    Punëdhënësi: {selectedJob.employer?.email || "Nuk ka të dhëna"}
+                    Punëdhënësi:{" "}
+                    {selectedJob.employer?.email || "Nuk ka të dhëna"}
                   </p>
                 </div>
 
@@ -239,7 +239,8 @@ function Jobs() {
                 <div>
                   <h3 className="font-bold text-white">Përfitimet</h3>
                   <p className="mt-2 leading-7">
-                    {selectedJob.benefits || "Nuk ka përfitime të specifikuara."}
+                    {selectedJob.benefits ||
+                      "Nuk ka përfitime të specifikuara."}
                   </p>
                 </div>
               </div>
