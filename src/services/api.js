@@ -123,10 +123,26 @@ export async function getApplicationsByEmployee(email) {
 }
 
 export async function saveEmployeeProfile(profileData) {
+  const formData = new FormData();
+
+  formData.append("employeeEmail", profileData.employeeEmail);
+  formData.append("fullName", profileData.fullName);
+  formData.append("phoneNumber", profileData.phoneNumber);
+  formData.append("profession", profileData.profession);
+  formData.append("skills", profileData.skills);
+  formData.append("bio", profileData.bio);
+
+  if (profileData.cv) {
+    formData.append("cv", profileData.cv);
+  }
+
+  if (profileData.portfolio) {
+    formData.append("portfolio", profileData.portfolio);
+  }
+
   const response = await fetch(`${API_BASE_URL}/employee-profile/save`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(profileData),
+    body: formData,
   });
 
   const text = await response.text();

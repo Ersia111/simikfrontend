@@ -80,37 +80,35 @@ function EmployeeDashboard() {
   }
 
   async function handleSaveProfile(e) {
-    e.preventDefault();
-    setMessage("");
-    setError("");
-    setSaving(true);
+  e.preventDefault();
 
-    try {
-      await saveEmployeeProfile({
-        employeeEmail: email,
-        fullName: profileData.fullName,
-        phoneNumber: profileData.phoneNumber,
-        profession: profileData.profession,
-        skills: profileData.skills,
-        bio: profileData.bio,
-      });
+  setMessage("");
+  setError("");
+  setSaving(true);
 
-      if (cvFile) {
-        await uploadCv(email, cvFile);
-      }
+  try {
+    await saveEmployeeProfile({
+      employeeEmail: email,
+      fullName: profileData.fullName,
+      phoneNumber: profileData.phoneNumber,
+      profession: profileData.profession,
+      skills: profileData.skills,
+      bio: profileData.bio,
+      cv: cvFile,
+      portfolio: portfolioFile,
+    });
 
-      if (portfolioFile) {
-        await uploadPortfolio(email, portfolioFile);
-      }
+    setMessage("Profili u ruajt me sukses.");
 
-      setMessage("Profili, CV dhe portfolio u ruajtën me sukses.");
-      setCvFile(null);
-      setPortfolioFile(null);
-    } catch (err) {
-      setError(err.message || "Gabim gjatë ruajtjes së profilit.");
-    } finally {
-      setSaving(false);
-    }
+    setCvFile(null);
+    setPortfolioFile(null);
+
+  } catch (err) {
+    setError(err.message || "Gabim gjatë ruajtjes së profilit.");
+  } finally {
+    setSaving(false);
+  }
+
   }
 
   return (

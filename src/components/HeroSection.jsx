@@ -3,7 +3,7 @@ import bridge from "../assets/bridge.png";
 
 function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#050b1a] px-6 py-24 text-white">
+   <section className="relative overflow-hidden px-6 pb-32 pt-0 text-white">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_20%,rgba(96,165,250,0.38),transparent_34%),radial-gradient(circle_at_10%_80%,rgba(37,99,235,0.25),transparent_38%)]" />
       <div className="absolute left-[-200px] top-[-200px] h-[520px] w-[520px] rounded-full bg-blue-500/30 blur-[140px]" />
       <div className="absolute bottom-[-220px] right-[-180px] h-[540px] w-[540px] rounded-full bg-indigo-500/30 blur-[150px]" />
