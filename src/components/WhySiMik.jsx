@@ -7,7 +7,7 @@ function WhySiMik() {
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
-  });
+  }); 
 
   const glowY = useTransform(scrollYProgress, [0, 1], [-80, 80]);
   const lineScale = useTransform(scrollYProgress, [0.18, 0.82], [0, 1]);

@@ -9,9 +9,7 @@ export async function registerUser(userData) {
 
   const text = await response.text();
 
-  if (!response.ok) {
-    throw new Error(text || "Gabim gjatë regjistrimit.");
-  }
+  if (!response.ok) throw new Error(text || "Gabim gjatë regjistrimit.");
 
   return text;
 }
@@ -25,9 +23,7 @@ export async function loginUser(loginData) {
 
   const data = await response.json();
 
-  if (!response.ok) {
-    throw new Error(data.message || "Gabim gjatë login.");
-  }
+  if (!response.ok) throw new Error(data.message || "Gabim gjatë login.");
 
   return data;
 }
@@ -35,9 +31,7 @@ export async function loginUser(loginData) {
 export async function getAllJobs() {
   const response = await fetch(`${API_BASE_URL}/jobs`);
 
-  if (!response.ok) {
-    throw new Error("Gabim gjatë marrjes së njoftimeve.");
-  }
+  if (!response.ok) throw new Error("Gabim gjatë marrjes së njoftimeve.");
 
   return response.json();
 }
@@ -51,9 +45,7 @@ export async function applyToJob(applicationData) {
 
   const text = await response.text();
 
-  if (!response.ok) {
-    throw new Error(text || "Gabim gjatë aplikimit.");
-  }
+  if (!response.ok) throw new Error(text || "Gabim gjatë aplikimit.");
 
   return text;
 }
@@ -67,9 +59,7 @@ export async function createJob(jobData) {
 
   const text = await response.text();
 
-  if (!response.ok) {
-    throw new Error(text || "Gabim gjatë krijimit të njoftimit.");
-  }
+  if (!response.ok) throw new Error(text || "Gabim gjatë krijimit të njoftimit.");
 
   return text;
 }
@@ -77,9 +67,7 @@ export async function createJob(jobData) {
 export async function getPackages() {
   const response = await fetch(`${API_BASE_URL}/packages`);
 
-  if (!response.ok) {
-    throw new Error("Gabim gjatë marrjes së paketave.");
-  }
+  if (!response.ok) throw new Error("Gabim gjatë marrjes së paketave.");
 
   return response.json();
 }
@@ -93,9 +81,7 @@ export async function buyPackage(data) {
 
   const text = await response.text();
 
-  if (!response.ok) {
-    throw new Error(text || "Gabim gjatë blerjes së paketës.");
-  }
+  if (!response.ok) throw new Error(text || "Gabim gjatë blerjes së paketës.");
 
   return text;
 }
@@ -103,53 +89,29 @@ export async function buyPackage(data) {
 export async function getApplicationsByJob(jobPostId) {
   const response = await fetch(`${API_BASE_URL}/applications/job/${jobPostId}`);
 
-  if (!response.ok) {
-    throw new Error("Gabim gjatë marrjes së aplikimeve.");
-  }
+  if (!response.ok) throw new Error("Gabim gjatë marrjes së aplikimeve.");
 
   return response.json();
 }
 
 export async function getApplicationsByEmployee(email) {
-  const response = await fetch(
-    `${API_BASE_URL}/applications/employee/${email}`
-  );
+  const response = await fetch(`${API_BASE_URL}/applications/employee/${email}`);
 
-  if (!response.ok) {
-    throw new Error("Gabim gjatë marrjes së aplikimeve.");
-  }
+  if (!response.ok) throw new Error("Gabim gjatë marrjes së aplikimeve.");
 
   return response.json();
 }
 
 export async function saveEmployeeProfile(profileData) {
-  const formData = new FormData();
-
-  formData.append("employeeEmail", profileData.employeeEmail);
-  formData.append("fullName", profileData.fullName);
-  formData.append("phoneNumber", profileData.phoneNumber);
-  formData.append("profession", profileData.profession);
-  formData.append("skills", profileData.skills);
-  formData.append("bio", profileData.bio);
-
-  if (profileData.cv) {
-    formData.append("cv", profileData.cv);
-  }
-
-  if (profileData.portfolio) {
-    formData.append("portfolio", profileData.portfolio);
-  }
-
   const response = await fetch(`${API_BASE_URL}/employee-profile/save`, {
     method: "POST",
-    body: formData,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(profileData),
   });
 
   const text = await response.text();
 
-  if (!response.ok) {
-    throw new Error(text || "Gabim gjatë ruajtjes së profilit.");
-  }
+  if (!response.ok) throw new Error(text || "Gabim gjatë ruajtjes së profilit.");
 
   return text;
 }
@@ -166,9 +128,7 @@ export async function uploadCv(email, file) {
 
   const text = await response.text();
 
-  if (!response.ok) {
-    throw new Error(text || "Gabim gjatë ngarkimit të CV.");
-  }
+  if (!response.ok) throw new Error(text || "Gabim gjatë ngarkimit të CV.");
 
   return text;
 }
@@ -185,9 +145,7 @@ export async function uploadPortfolio(email, file) {
 
   const text = await response.text();
 
-  if (!response.ok) {
-    throw new Error(text || "Gabim gjatë ngarkimit të portfolio.");
-  }
+  if (!response.ok) throw new Error(text || "Gabim gjatë ngarkimit të portfolio.");
 
   return text;
 }
@@ -195,9 +153,7 @@ export async function uploadPortfolio(email, file) {
 export async function getEmployeeProfile(email) {
   const response = await fetch(`${API_BASE_URL}/employee-profile/${email}`);
 
-  if (!response.ok) {
-    throw new Error("Profili i punonjësit nuk u gjet.");
-  }
+  if (!response.ok) throw new Error("Profili i punonjësit nuk u gjet.");
 
   return response.json();
 }
@@ -205,9 +161,7 @@ export async function getEmployeeProfile(email) {
 export async function getPendingSubscriptions() {
   const response = await fetch(`${API_BASE_URL}/packages/pending`);
 
-  if (!response.ok) {
-    throw new Error("Gabim gjatë marrjes së kërkesave.");
-  }
+  if (!response.ok) throw new Error("Gabim gjatë marrjes së kërkesave.");
 
   return response.json();
 }
@@ -219,9 +173,7 @@ export async function approveSubscription(id) {
 
   const text = await response.text();
 
-  if (!response.ok) {
-    throw new Error(text || "Gabim gjatë aprovimit.");
-  }
+  if (!response.ok) throw new Error(text || "Gabim gjatë aprovimit.");
 
   return text;
 }
@@ -233,9 +185,7 @@ export async function rejectSubscription(id) {
 
   const text = await response.text();
 
-  if (!response.ok) {
-    throw new Error(text || "Gabim gjatë refuzimit.");
-  }
+  if (!response.ok) throw new Error(text || "Gabim gjatë refuzimit.");
 
   return text;
 }
@@ -243,9 +193,7 @@ export async function rejectSubscription(id) {
 export async function getEmployerSubscriptions(email) {
   const response = await fetch(`${API_BASE_URL}/packages/employer/${email}`);
 
-  if (!response.ok) {
-    throw new Error("Gabim gjatë marrjes së paketave.");
-  }
+  if (!response.ok) throw new Error("Gabim gjatë marrjes së paketave.");
 
   return response.json();
 }
